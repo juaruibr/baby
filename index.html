@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Shower Juan Martín 👶</title>
+
+    <style>
+        /* Animación */
+        @keyframes fondoAnimado {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #78956f;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #90a288;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, .08);
+        }
+
+        th {
+            background: #78956f;
+            color: white;
+            padding: 16px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .reservar {
+            background: #78956f;
+            color: white;
+        }
+
+        .liberar {
+            background: #e53935;
+            color: white;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        a {
+            color: #78956f;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #555;
+        }
+
+        /* ===== FONDO ANIMADO ===== */
+
+        body {
+            background: linear-gradient(-45deg,
+                    #e8f5e9,
+                    #f4fbf6,
+                    #d0f0d8,
+                    #ffffff);
+            background-size: 400% 400%;
+            animation: fondoAnimado 15s ease infinite;
+        }
+
+        @keyframes fondoAnimado {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* ===== BURBUJAS ===== */
+
+        .burbujas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            /* no bloquea clicks */
+            z-index: 0;
+            /* visible */
+            overflow: hidden;
+        }
+
+        .burbujas span {
+            position: absolute;
+            bottom: -50px;
+            width: 20px;
+            height: 20px;
+            background: rgba(76, 175, 80, 0.25);
+            border-radius: 50%;
+            animation: subir 15s linear infinite;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+        }
+
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+
+        @keyframes subir {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: .4;
+            }
+
+            100% {
+                transform: translateY(-110vh) scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        /* tamaños variados */
+        .burbujas span:nth-child(1) {
+            left: 10%;
+            width: 15px;
+            height: 15px;
+            animation-duration: 12s;
+        }
+
+        .burbujas span:nth-child(2) {
+            left: 25%;
+            width: 25px;
+            height: 25px;
+            animation-duration: 18s;
+        }
+
+        .burbujas span:nth-child(3) {
+            left: 40%;
+            animation-duration: 10s;
+        }
+
+        .burbujas span:nth-child(4) {
+            left: 55%;
+            width: 30px;
+            height: 30px;
+            animation-duration: 20s;
+        }
+
+        .burbujas span:nth-child(5) {
+            left: 70%;
+            animation-duration: 14s;
+        }
+
+        .burbujas span:nth-child(6) {
+            left: 85%;
+            width: 18px;
+            height: 18px;
+            animation-duration: 16s;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: translate(-50%, -50%) scale(.5);
+                opacity: 0;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.3);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* ===== HEADER INVITACIÓN ===== */
+
+        .invitacion {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 1s ease;
+        }
+
+        .icono {
+            font-size: 40px;
+            margin-bottom: 10px;
+            animation: flotar 3s ease-in-out infinite;
+        }
+
+        .invitacion h2 {
+            color: #2e7d32;
+            margin: 5px 0;
+        }
+
+        .nombre {
+            color: #255d02;
+            margin: 0;
+        }
+
+        .bebe {
+            color: #1b5e20;
+            font-size: 32px;
+            margin: 5px 0 10px 0;
+        }
+
+        .mensaje {
+            color: #4caf50;
+            margin: 0;
+        }
+
+        /* animaciones */
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes flotar {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="burbujas"></div>
+    <div class="container">
+        <div class="invitacion">
+            <div class="icono">👶</div>
+            <h2>¡Estás invitado!</h2>
+            <p class="nombre">Baby Shower de</p>
+            <h1 class="bebe">Juan Martín</h1>
+            <p class="mensaje">Gracias por acompañarnos en este momento tan especial 💚</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>🎁 Regalo</th>
+                    <th>👤 Quién Reserva</th>
+                    <th>🔗 Referencia</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+
+        <div class="footer">Con amor para nuestro bebé 💚</div>
+
+    </div>
+
+    <script>
+
+        // LISTA DE REGALOS (solo editas esto)
+        const regalos = [
+            { regalo: "Pañales Etapa 1", referencia: "https://www.cruzverde.com.co/promo-panaltoallitas-winny-ultratim-sec-etapa-1-paquete-x-30-panales-20-toallitas/COCV_550456.html" },
+            { regalo: "Toallitas Humedas", referencia: "https://www.farmatodo.com.co/producto/1033808-toallitas-humedas-winny" },
+            { regalo: "Crema Colita", referencia: "https://www.cruzverde.com.co/almipro-25-unguento-topico-pote-por-60gr/COCV_156708.html" },
+            { regalo: "Pañales Etapa 1", referencia: "https://www.cruzverde.com.co/promo-panaltoallitas-winny-ultratim-sec-etapa-1-paquete-x-30-panales-20-toallitas/COCV_550456.html" },
+            { regalo: "Toallitas Humedas", referencia: "https://www.farmatodo.com.co/producto/1033808-toallitas-humedas-winny" },
+            { regalo: "Crema Colita", referencia: "https://www.cruzverde.com.co/almipro-25-unguento-topico-pote-por-60gr/COCV_156708.html" },
+            { regalo: "Shampoo para Bebé", referencia: "https://www.cutis.com.co/eucerin-baby-bano-shampoo-400-ml/p?srsltid=AfmBOooYpsbq7htAIpBmxN2NhgRnBioQTPUXRRmIsG_FlNKUDbb3EFwj" },
+            { regalo: "Loción", referencia: "https://www.farmatodo.com.co/producto/1037684-colonia-arrurru-naturals?wpsrc=Organic+Search&wpsn=www.farmatodo.com.co" },
+            { regalo: "Limas Uñas de Bebé", referencia: "https://www.exito.com/lima-electrica-para-bebe-nio-cian-beb-102838051/p" },
+            { regalo: "Termómetro", referencia: "https://www.exito.com/termometro-digital-clinico-de-contacto-infantil-bebes-102753190-mp/p" },
+            { regalo: "Toalla suave con Capucha", referencia: "https://www.falabella.com.co/falabella-co/product/32675386/Toalla-de-bano-300-g-TOKI-TOALLA-BF-76-x-76-cm-/73231101" },
+            { regalo: "Bañera", referencia: "https://www.carestino.com.co/producto/baniera-plegable-con-soporte-maui-40l-gris/" },
+            { regalo: "Primer Conjunto (Salida Hospital)", referencia: "https://www.babyfresh.co/products/750985-025760?variant=53748145226100" },
+            { regalo: "Mameluco", referencia: "https://www.babyfresh.co/products/724366-026077?variant=53748127760756" },
+            { regalo: "Mameluco", referencia: "https://www.babyfresh.co/products/745959-026077?variant=53748131201396" },
+            { regalo: "Pijama", referencia: "https://www.babyfresh.co/products/745960-026298?variant=53748131398004" },
+            { regalo: "Conjunto para salir (Camiseta + Pantalón)", referencia: "https://www.offcorss.com/conjunto-corto-dos-piezas-para-bebe-nino-31126391/p" },
+            { regalo: "Camiseta + Pantalón", referencia: "https://www.offcorss.com/conjunto-corto-dos-piezas-para-bebe-nino-31126421/p" },
+            { regalo: "Chaqueta o Saco Liviano", referencia: "https://www.offcorss.com/buzo-cerrado-con-capucha-para-bebe-nino-31135041/p" },
+            { regalo: "Mantas Ligeras (Muselina)", referencia: "https://www.exito.com/cobertor-bebe-cobija-muselina-manta-de-algodon-x3und-nino-103263640-mp/p" },
+            { regalo: "Toallitas para babas", referencia: "https://www.exito.com/toallitas-babitas-set-x-6-toral-05200-3071656/p?idsku=3210709&srsltid=AfmBOoqXQx39fG_37S8C686-lKtqYmjEvgAL-qS25Daz8fFKS05m467Y0zo" },
+            { regalo: "Cambiador Impermeable", referencia: "https://www.exito.com/cambiador-bebe-acolchado-estampado-antialergico-bebe-impermeable-oso-103732917-mp/p" },
+            { regalo: "Cojín de Lactancia", referencia: "https://www.falabella.com.co/falabella-co/product/142825583/Almohada-Cojin-Materno-De-Lactancia-Multiusos-Gris/142825584?kid=shopp312fa&gclsrc=aw.ds&gad_source=4&gad_campaignid=22888388553&gbraid=0AAAAADtuoyQ-D03NlMISdqoF8bkrT9Chb&gclid=Cj0KCQiAhaHMBhD2ARIsAPAU_D4CdId2PKCbJk5gA2uj3X2bUw8Mbot4fEb9htH6-TIwIQUtpsyZ3tMaAt28EALw_wcB" },
+            { regalo: "Biberón", referencia: "https://www.farmatodo.com.co/producto/287450622-tetero-philips-avent-natural-30-airfree-4oz-0m-x-1-und" },
+            { regalo: "Cepillo para Limpiar Biberones y Tetinas", referencia: "https://www.pepeganga.com/cepillo-de-limpieza-dr-browns-44311/p?srsltid=AfmBOookZV5Xn5RIsWYbBUxSkNyjgsVqr_iJ1K6ZRGJHTqtLi1RRBlY1" },
+            { regalo: "Libro de Tela / Carton", referencia: "https://www.panamericana.com.co/mis-primeros-animales-libro-de-tela-696960/p" },
+            { regalo: "Juguete con Texturas", referencia: "https://salewireov.click/product_tag/20484132_.html" },
+            { regalo: "Tapete de Juego", referencia: "https://www.alkosto.com/tapete-bebes-alfombra-juego-plegable-sky-sail-bebesit/p/6905400886008?utm_source=google&utm_medium=organic&utm_campaign=Shopping-Organico&srsltid=AfmBOoqqDVRGqbI51N9XRjbN6u3f1SGzoc-q8cCBxZBPAqRknXVC4FeA50c" }
+        ];
+
+        let datos = JSON.parse(localStorage.getItem("babyshower")) || regalos.map(r => ({ ...r, quien: "" }));
+
+        function guardar() {
+            localStorage.setItem("babyshower", JSON.stringify(datos));
+        }
+
+        function render() {
+            const tbody = document.getElementById("tbody");
+            tbody.innerHTML = "";
+
+            datos.forEach((item, i) => {
+                const fila = document.createElement("tr");
+
+                fila.innerHTML = `
+<td>${item.regalo}</td>
+<td>${item.quien || `<input placeholder="Tu nombre" id="n${i}">`}</td>
+<td><a href="${item.referencia}" target="_blank">Ver referencia</a></td>
+<td>
+${item.quien
+                        ? `<button class="liberar" onclick="liberar(${i})">Liberar</button>`
+                        : `<button class="reservar" onclick="reservar(${i})">Reservar</button>`}
+</td>
+`;
+
+                tbody.appendChild(fila);
+            });
+        }
+
+        function reservar(i) {
+            const nombre = document.getElementById("n" + i).value.trim();
+            if (!nombre) { alert("Escribe tu nombre"); return; }
+
+            datos[i].quien = nombre;
+            guardar();
+            render();
+
+            // animación celebración
+            celebrar();
+        }
+
+        function celebrar() {
+            const efecto = document.createElement("div");
+            efecto.innerHTML = "🎉";
+            efecto.style.position = "fixed";
+            efecto.style.fontSize = "60px";
+            efecto.style.left = "50%";
+            efecto.style.top = "50%";
+            efecto.style.transform = "translate(-50%,-50%)";
+            efecto.style.animation = "pop 1s ease forwards";
+            document.body.appendChild(efecto);
+
+            setTimeout(() => efecto.remove(), 1000);
+        }
+
+
+        function liberar(i) {
+            datos[i].quien = "";
+            guardar();
+            render();
+        }
+
+        render();
+
+        // crear burbujas dinámicamente
+        const contenedor = document.querySelector(".burbujas");
+
+        for (let i = 0; i < 15; i++) {
+            const b = document.createElement("span");
+            contenedor.appendChild(b);
+        }
+
+
+    </script>
+
+</body>
+
+</html>
