@@ -380,7 +380,8 @@
             { regalo: "Tapete de Juego", referencia: "https://www.alkosto.com/tapete-bebes-alfombra-juego-plegable-sky-sail-bebesit/p/6905400886008?utm_source=google&utm_medium=organic&utm_campaign=Shopping-Organico&srsltid=AfmBOoqqDVRGqbI51N9XRjbN6u3f1SGzoc-q8cCBxZBPAqRknXVC4FeA50c" }
         ];
 
-        let datos = regalos.map(r => ({ ...r, quien: "", id: null }));
+        let datos = regalos.map(r => ({ ...r, quien: "", id: null, usuarioId: null }));
+
 
         // ===== CARGAR DESDE FIREBASE =====
         async function cargarReservas() {
@@ -519,5 +520,6 @@
 </body>
 
 </html>
+
 
 
