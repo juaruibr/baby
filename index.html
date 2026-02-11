@@ -318,7 +318,27 @@
 
     </div>
 
-    <script>
+    <script type="module">
+
+        // ===== FIREBASE CONFIG =====
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            getDocs,
+            updateDoc,
+            doc
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDLy7fBQD8Md2v8rgfzzsAzn17nz-9Ut-Q",
+            authDomain: "babyshower-juan-martin.firebaseapp.com",
+            projectId: "babyshower-juan-martin",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         // LISTA DE REGALOS (solo editas esto)
         const regalos = [
@@ -352,12 +372,26 @@
             { regalo: "Tapete de Juego", referencia: "https://www.alkosto.com/tapete-bebes-alfombra-juego-plegable-sky-sail-bebesit/p/6905400886008?utm_source=google&utm_medium=organic&utm_campaign=Shopping-Organico&srsltid=AfmBOoqqDVRGqbI51N9XRjbN6u3f1SGzoc-q8cCBxZBPAqRknXVC4FeA50c" }
         ];
 
-        let datos = JSON.parse(localStorage.getItem("babyshower")) || regalos.map(r => ({ ...r, quien: "" }));
+        let datos = regalos.map(r => ({ ...r, quien: "", id: null }));
 
-        function guardar() {
-            localStorage.setItem("babyshower", JSON.stringify(datos));
+        // ===== CARGAR DESDE FIREBASE =====
+        async function cargarReservas() {
+            const querySnapshot = await getDocs(collection(db, "reservas"));
+
+            querySnapshot.forEach((docu) => {
+                const data = docu.data();
+
+                const index = datos.findIndex(r => r.regalo === data.regalo);
+                if (index !== -1) {
+                    datos[index].quien = data.reservadoPor;
+                    datos[index].id = docu.id;
+                }
+            });
+
+            render();
         }
 
+        // ===== RENDER =====
         function render() {
             const tbody = document.getElementById("tbody");
             tbody.innerHTML = "";
@@ -366,32 +400,50 @@
                 const fila = document.createElement("tr");
 
                 fila.innerHTML = `
-<td>${item.regalo}</td>
-<td>${item.quien || `<input placeholder="Tu nombre" id="n${i}">`}</td>
-<td><a href="${item.referencia}" target="_blank">Ver referencia</a></td>
-<td>
-${item.quien
-                        ? `<button class="liberar" onclick="liberar(${i})">Liberar</button>`
-                        : `<button class="reservar" onclick="reservar(${i})">Reservar</button>`}
-</td>
-`;
+      <td>${item.regalo}</td>
+      <td>${item.quien || `<input placeholder="Tu nombre" id="n${i}">`}</td>
+      <td><a href="${item.referencia}" target="_blank">Ver referencia</a></td>
+      <td>
+        ${item.quien
+                        ? `<button class="liberar" onclick="window.liberar(${i})">Liberar</button>`
+                        : `<button class="reservar" onclick="window.reservar(${i})">Reservar</button>`}
+      </td>
+    `;
 
                 tbody.appendChild(fila);
             });
         }
 
-        function reservar(i) {
+        // ===== RESERVAR =====
+        window.reservar = async function (i) {
             const nombre = document.getElementById("n" + i).value.trim();
-            if (!nombre) { alert("Escribe tu nombre"); return; }
+            if (!nombre) return alert("Escribe tu nombre");
+
+            const docRef = await addDoc(collection(db, "reservas"), {
+                regalo: datos[i].regalo,
+                reservadoPor: nombre
+            });
 
             datos[i].quien = nombre;
-            guardar();
-            render();
+            datos[i].id = docRef.id;
 
-            // animación celebración
+            render();
             celebrar();
         }
 
+        // ===== LIBERAR =====
+        window.liberar = async function (i) {
+            if (!datos[i].id) return;
+
+            await updateDoc(doc(db, "reservas", datos[i].id), {
+                reservadoPor: ""
+            });
+
+            datos[i].quien = "";
+            render();
+        }
+
+        // ===== CELEBRACIÓN =====
         function celebrar() {
             const efecto = document.createElement("div");
             efecto.innerHTML = "🎉";
@@ -406,57 +458,10 @@ ${item.quien
             setTimeout(() => efecto.remove(), 1000);
         }
 
-
-        function liberar(i) {
-            datos[i].quien = "";
-            guardar();
-            render();
-        }
-
-        render();
-
-        // crear burbujas dinámicamente
-        const contenedor = document.querySelector(".burbujas");
-
-        for (let i = 0; i < 15; i++) {
-            const b = document.createElement("span");
-            contenedor.appendChild(b);
-        }
-
-        await addDoc(collection(db, "reservas"), {
-  regalo: "Pañales",
-  reservadoPor: nombre
-});
-
-
+        // ===== INICIAR =====
+        cargarReservas();
 
     </script>
-    <script type="module">
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDLy7fBQD8Md2v8rgfzzsAzn17nz-9Ut-Q",
-  authDomain: "babyshower-juan-martin.firebaseapp.com",
-  projectId: "babyshower-juan-martin",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const analytics = getAnalytics(app);
-
-window.db = db;
-window.collection = collection;
-window.addDoc = addDoc;
-window.getDocs = getDocs;
-</script>
-
-
 </body>
 
-
 </html>
-
-
-
