@@ -423,6 +423,12 @@ ${item.quien
             contenedor.appendChild(b);
         }
 
+        await addDoc(collection(db, "reservas"), {
+  regalo: "Pañales",
+  reservadoPor: nombre
+});
+
+
 
     </script>
     <script type="module">
@@ -451,5 +457,6 @@ window.getDocs = getDocs;
 
 
 </html>
+
 
 
