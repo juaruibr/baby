@@ -340,6 +340,14 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // ===== IDENTIFICADOR UNICO POR DISPOSITIVO =====
+        let usuarioId = localStorage.getItem("usuarioBaby");
+
+        if (!usuarioId) {
+            usuarioId = crypto.randomUUID();
+            localStorage.setItem("usuarioBaby", usuarioId);
+        }
+
         // LISTA DE REGALOS (solo editas esto)
         const regalos = [
             { regalo: "Pañales Etapa 1", referencia: "https://www.cruzverde.com.co/promo-panaltoallitas-winny-ultratim-sec-etapa-1-paquete-x-30-panales-20-toallitas/COCV_550456.html" },
@@ -378,13 +386,23 @@
         async function cargarReservas() {
             const querySnapshot = await getDocs(collection(db, "reservas"));
 
+            datos.forEach(d => {
+                d.quien = "";
+                d.id = null;
+                d.usuarioId = null;
+            });
+
             querySnapshot.forEach((docu) => {
                 const data = docu.data();
 
+                if (data.estado !== "reservado") return;
+
                 const index = datos.findIndex(r => r.regalo === data.regalo);
+
                 if (index !== -1) {
                     datos[index].quien = data.reservadoPor;
                     datos[index].id = docu.id;
+                    datos[index].usuarioId = data.usuarioId;
                 }
             });
 
@@ -401,7 +419,14 @@
 
                 fila.innerHTML = `
       <td>${item.regalo}</td>
-      <td>${item.quien || `<input placeholder="Tu nombre" id="n${i}">`}</td>
+      ${item.quien
+                        ? (item.usuarioId === usuarioId
+                            ? `<button class="liberar" onclick="window.liberar(${i})">Liberar</button>`
+                            : `<span>Reservado</span>`
+                        )
+                        : `<button class="reservar" onclick="window.reservar(${i})">Reservar</button>`
+                    }
+
       <td><a href="${item.referencia}" target="_blank">Ver referencia</a></td>
       <td>
         ${item.quien
@@ -419,29 +444,58 @@
             const nombre = document.getElementById("n" + i).value.trim();
             if (!nombre) return alert("Escribe tu nombre");
 
+            const querySnapshot = await getDocs(collection(db, "reservas"));
+
+            const yaReservado = [...querySnapshot.docs].find(
+                d => d.data().regalo === datos[i].regalo && d.data().estado === "reservado"
+            );
+
+            if (yaReservado) {
+                alert("Este regalo ya fue reservado 💚");
+                await cargarReservas();
+                return;
+            }
+
             const docRef = await addDoc(collection(db, "reservas"), {
                 regalo: datos[i].regalo,
-                reservadoPor: nombre
+                reservadoPor: nombre,
+                usuarioId: usuarioId, // ← clave
+                estado: "reservado"
             });
 
             datos[i].quien = nombre;
             datos[i].id = docRef.id;
+            datos[i].usuarioId = usuarioId;
 
             render();
             celebrar();
         }
 
+
+
         // ===== LIBERAR =====
         window.liberar = async function (i) {
             if (!datos[i].id) return;
 
+            // validar dueño
+            if (datos[i].usuarioId !== usuarioId) {
+                alert("Solo la persona que reservó puede liberar este regalo 💚");
+                return;
+            }
+
             await updateDoc(doc(db, "reservas", datos[i].id), {
-                reservadoPor: ""
+                reservadoPor: "",
+                estado: "disponible",
+                usuarioId: null
             });
 
             datos[i].quien = "";
+            datos[i].usuarioId = null;
+
             render();
         }
+
+
 
         // ===== CELEBRACIÓN =====
         function celebrar() {
