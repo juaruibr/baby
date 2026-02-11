@@ -471,10 +471,14 @@
                     const snapshot = await getDocs(reservasRef);
 
                     // verificar si ya existe reserva activa del mismo regalo
-                    const existente = snapshot.docs.find(d =>
-                        d.data().regalo === datos[i].id &&
-                        d.data().estado === "reservado"
-                    );
+                    const existente = snapshot.docs.find(d => {
+                        const data = d.data();
+                        return (
+                            data.regalo != null &&
+                            Number(data.regalo) === Number(datos[i].id) &&
+                            data.estado === "reservado"
+                        );
+                    });
 
                     if (existente) {
                         throw "YA_RESERVADO";
