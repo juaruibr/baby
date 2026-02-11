@@ -478,6 +478,7 @@
             datos[i].id = docRef.id;
             datos[i].usuarioId = usuarioId;
 
+            render();
             celebrar();
         }
 
@@ -502,7 +503,10 @@
             datos[i].quien = "";
             datos[i].usuarioId = null;
 
+            render();
         }
+
+
 
         // ===== CELEBRACIÓN =====
         function celebrar() {
