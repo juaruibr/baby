@@ -244,7 +244,7 @@
 
         .invitacion h2 {
             color: #2e7d32;
-            margin: 1px 0;
+            margin: 5px 0;
         }
 
         .nombre {
@@ -255,7 +255,7 @@
         .bebe {
             color: #1b5e20;
             font-size: 32px;
-            margin: 1px 0 1px 0;
+            margin: 5px 0 10px 0;
         }
 
         .mensaje {
@@ -381,6 +381,10 @@
         }
 
         td:nth-child(4)::before {
+            content: "📌 Estado";
+        }
+
+        td:nth-child(5)::before {
             content: "Acción";
         }
 
@@ -392,6 +396,13 @@
             border: 1px solid #e0e0e0;
             font-size: 16px;
         }
+
+        .estado-disponible {
+            color: #78956f;
+            font-weight: 600;
+            opacity: .7;
+        }
+
 
         /* botones */
         button {
@@ -648,6 +659,113 @@
             text-decoration: none;
             font-weight: 600;
         }
+
+        /* tarjeta reservada */
+        /* tarjeta reservada elegante */
+        tr:has(.reservado-info) {
+            background: linear-gradient(135deg, #f1f8f2, #ffffff);
+            border: 2px solid #d9eadb;
+        }
+
+        /* badge más bonito */
+        .badge-reservado {
+            background: linear-gradient(135deg, #66bb6a, #2e7d32);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* nombre más elegante */
+        .reservado-info strong {
+            font-size: 18px;
+            color: #2e7d32;
+        }
+
+
+        /* info reserva */
+        .reservado-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* badge reservado */
+        .badge-reservado {
+            background: #4caf50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            width: fit-content;
+        }
+
+        /* referencia oculta */
+        .ref-oculta {
+            color: #bbb;
+        }
+
+        /* texto bloqueado */
+        .bloqueado {
+            color: #999;
+            font-weight: 500;
+        }
+
+        /* ===== layout ordenado para tarjetas reservadas ===== */
+
+        /* ===== SOLO mobile usa grid ===== */
+        @media (max-width: 768px) {
+
+            tr.reservado-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr auto auto;
+                gap: 10px;
+                align-items: center;
+            }
+
+            tr.reservado-row td:nth-child(1) {
+                grid-column: 1;
+            }
+
+            tr.reservado-row td:nth-child(2) {
+                grid-column: 2;
+            }
+
+            tr.reservado-row td:nth-child(3) {
+                display: none;
+            }
+
+            tr.reservado-row td:nth-child(4) {
+                grid-column: 3;
+            }
+
+            tr.reservado-row td:nth-child(5) {
+                grid-column: 4;
+            }
+
+            tr.reservado-row .badge-reservado {
+                justify-self: center;
+            }
+
+            /* quitar labels automáticos en reservados */
+            .reservado-row td::before {
+                display: none !important;
+            }
+        }
+
+        /* ===== DESKTOP vuelve a tabla normal ===== */
+        @media (min-width: 769px) {
+
+            tr.reservado-row {
+                display: table-row;
+            }
+
+            tr.reservado-row td {
+                display: table-cell;
+            }
+
+        }
     </style>
 </head>
 
@@ -667,9 +785,11 @@
                     <th>🎁 Regalo</th>
                     <th>👤 Quién Reserva</th>
                     <th>🔗 Referencia</th>
+                    <th>📌 Estado</th>
                     <th>Acción</th>
                 </tr>
             </thead>
+
             <tbody id="tbody"></tbody>
         </table>
 
@@ -797,30 +917,44 @@
             datos.forEach((item, i) => {
                 const fila = document.createElement("tr");
 
-                fila.innerHTML = `
-      <td>${item.regalo}</td>
+                if (item.quien) {
+                    fila.classList.add("reservado-row");
+                }
 
-      <td>
-        ${item.quien
+
+                fila.innerHTML = `
+<td>${item.regalo}</td>
+
+<td>
+  ${item.quien
                         ? `<strong>${item.quien}</strong>`
                         : `<input placeholder="Tu nombre" id="n${i}">`
                     }
-      </td>
+</td>
 
-      <td>
-        <a href="${item.referencia}" target="_blank">Ver referencia</a>
-      </td>
+<td>
+  ${item.quien
+                        ? `` /* oculta referencia si reservado */
+                        : `<a href="${item.referencia}" target="_blank">Ver referencia</a>`
+                    }
+</td>
 
-      <td>
-        ${item.quien
+<td>
+  ${item.quien
+                        ? `<span class="badge-reservado">✓ Reservado</span>`
+                        : `<span class="estado-disponible" style="color:#888;">Disponible</span>`
+                    }
+</td>
+
+<td>
+  ${item.quien
                         ? (item.usuarioId === usuarioId
                             ? `<button class="liberar" onclick="window.liberar(${i})">Liberar</button>`
-                            : `<span>Reservado</span>`
-                        )
+                            : ``)
                         : `<button class="reservar" onclick="window.reservar(${i})">Reservar</button>`
                     }
-      </td>
-    `;
+</td>
+`;
 
                 tbody.appendChild(fila);
             });
@@ -866,7 +1000,7 @@
 
                         });
 
-                        mostrarCheck();
+                        mostrarCheck("Reserva confirmada 💚");
 
                     } catch (error) {
                         if (error === "YA_RESERVADO") {
@@ -899,7 +1033,7 @@
                         usuarioId: null
                     });
 
-                    mostrarCheck();
+                    mostrarCheck("Reserva liberada correctamente 🤎");
                 }
             );
         }
@@ -923,14 +1057,18 @@
         }
 
         // ===== CHECK VERDE =====
-        function mostrarCheck() {
+        function mostrarCheck(mensaje = "Reserva confirmada 💚") {
             const check = document.getElementById("successCheck");
+            const text = document.getElementById("successText");
+
+            text.textContent = mensaje;
             check.classList.add("show");
 
             setTimeout(() => {
                 check.classList.remove("show");
             }, 1800);
         }
+
 
 
         // ===== MODAL =====
@@ -976,9 +1114,10 @@
     <div id="successCheck" class="success-check">
         <div class="check-box">
             <div class="check-icon">✓</div>
-            <p>Reserva confirmada 💚</p>
+            <p id="successText">Reserva confirmada 💚</p>
         </div>
     </div>
+
 
 
 </body>
