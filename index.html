@@ -289,6 +289,12 @@
             }
         }
 
+        html,
+        body {
+            overflow-x: hidden;
+        }
+
+
         /* ===== RESPONSIVE MOBILE ===== */
 
         @media (max-width: 768px) {
@@ -324,9 +330,23 @@
                 border: none;
                 padding: 10px 0;
                 text-align: left;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+                display: block;
+                width: 100%;
+                word-break: break-word;
+            }
+
+            td::before {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            input {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            button {
+                width: 100%;
             }
 
             td::before {
