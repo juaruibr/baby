@@ -766,6 +766,48 @@
             }
 
         }
+
+        /* ===== NOMBRE DEL REGALO MÁS PROTAGONISTA ===== */
+
+        td:first-child {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #2e4f2e;
+            letter-spacing: .3px;
+        }
+
+        /* reservado → aún más visible */
+        tr.reservado-row td:first-child {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1b5e20;
+        }
+
+        /* mobile → aún más grande */
+        @media (max-width: 768px) {
+            td:first-child {
+                font-size: 1.15rem;
+            }
+
+            tr.reservado-row td:first-child {
+                font-size: 1.2rem;
+            }
+        }
+
+        td:first-child {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1b5e20;
+        }
+
+        tr.reservado-row td:first-child {
+            color: #2e7d32;
+        }
+
+        tbody tr:hover td:first-child {
+            transform: scale(1.03);
+            transition: .2s ease;
+        }
     </style>
 </head>
 
