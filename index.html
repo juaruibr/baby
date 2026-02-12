@@ -296,7 +296,7 @@
 
 
         /* ===== RESPONSIVE MOBILE ===== */
-        
+
 
         /* ===== UI MODERNA MOBILE FIRST ===== */
 
@@ -463,6 +463,85 @@
             button {
                 width: auto;
             }
+        }
+
+        /* ===== MODAL ===== */
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: .25s;
+            z-index: 999;
+        }
+
+        .modal.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-box {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .2);
+            animation: modalIn .3s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: scale(.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-box h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+
+        .modal-box p {
+            margin: 15px 0 25px 0;
+            color: #444;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn-cancelar {
+            background: #eee;
+        }
+
+        .btn-confirmar {
+            background: #78956f;
+            color: white;
         }
     </style>
 </head>
@@ -636,54 +715,58 @@
 
 
         // ===== RESERVAR =====
-        window.reservar = async function (i) {
+        window.reservar = function (i) {
+
             const nombre = document.getElementById("n" + i).value.trim();
             if (!nombre) return alert("Escribe tu nombre");
 
-            try {
-                await runTransaction(db, async (transaction) => {
+            abrirModal(
+                `¿Confirmas reservar "${datos[i].regalo}" a nombre de ${nombre}?`,
+                async () => {
 
-                    const reservasRef = collection(db, "reservas");
-                    const snapshot = await getDocs(reservasRef);
+                    try {
+                        await runTransaction(db, async (transaction) => {
 
-                    // verificar si ya existe reserva activa del mismo regalo
-                    const existente = snapshot.docs.find(d => {
-                        const data = d.data();
-                        return (
-                            data.regalo != null &&
-                            Number(data.regalo) === Number(datos[i].id) &&
-                            data.estado === "reservado"
-                        );
-                    });
+                            const reservasRef = collection(db, "reservas");
+                            const snapshot = await getDocs(reservasRef);
 
-                    if (existente) {
-                        throw "YA_RESERVADO";
+                            const existente = snapshot.docs.find(d => {
+                                const data = d.data();
+                                return (
+                                    data.regalo != null &&
+                                    Number(data.regalo) === Number(datos[i].id) &&
+                                    data.estado === "reservado"
+                                );
+                            });
+
+                            if (existente) throw "YA_RESERVADO";
+
+                            const nuevaReservaRef = doc(reservasRef);
+
+                            transaction.set(nuevaReservaRef, {
+                                regalo: datos[i].id,
+                                reservadoPor: nombre,
+                                usuarioId: usuarioId,
+                                estado: "reservado",
+                                fecha: new Date()
+                            });
+
+                        });
+
+                        celebrar();
+
+                    } catch (error) {
+                        if (error === "YA_RESERVADO") {
+                            alert("Este regalo ya fue reservado por otra persona 💚");
+                        } else {
+                            alert("Ocurrió un error");
+                        }
                     }
 
-                    // crear nueva reserva
-                    const nuevaReservaRef = doc(reservasRef);
-
-                    transaction.set(nuevaReservaRef, {
-                        regalo: datos[i].id,
-                        reservadoPor: nombre,
-                        usuarioId: usuarioId,
-                        estado: "reservado",
-                        fecha: new Date()
-                    });
-
-                });
-
-                celebrar();
-
-            } catch (error) {
-                if (error === "YA_RESERVADO") {
-                    alert("Este regalo ya fue reservado por otra persona 💚");
-                } else {
-                    console.error(error);
-                    alert("Ocurrió un error al reservar");
                 }
-            }
+            );
         };
+
 
         // ===== LIBERAR =====
         window.liberar = async function (i) {
@@ -724,10 +807,45 @@
             setTimeout(() => efecto.remove(), 1000);
         }
 
+        // ===== MODAL =====
+        let accionPendiente = null;
+
+        function abrirModal(texto, callback) {
+            document.getElementById("modalTexto").innerText = texto;
+            document.getElementById("modalConfirm").classList.add("show");
+
+            accionPendiente = callback;
+        }
+
+        window.cerrarModal = function () {
+            document.getElementById("modalConfirm").classList.remove("show");
+            accionPendiente = null;
+        };
+
+        document.getElementById("btnConfirmar").onclick = () => {
+            if (accionPendiente) accionPendiente();
+            cerrarModal();
+        };
+
+
         // ===== INICIAR =====
         cargarReservas();
 
     </script>
+
+    <!-- ===== MODAL CONFIRMACION ===== -->
+    <div id="modalConfirm" class="modal">
+        <div class="modal-box">
+            <h3>Confirmar reserva 💚</h3>
+            <p id="modalTexto"></p>
+
+            <div class="modal-actions">
+                <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-confirmar" id="btnConfirmar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>
