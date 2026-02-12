@@ -296,92 +296,172 @@
 
 
         /* ===== RESPONSIVE MOBILE ===== */
-        @media (max-width: 768px) {
+        
 
-            body {
-                margin: 0;
-                padding: 12px;
+        /* ===== UI MODERNA MOBILE FIRST ===== */
+
+        /* base */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 12px;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        /* contenedor */
+        .container {
+            max-width: 600px;
+            margin: auto;
+            width: 100%;
+        }
+
+        /* tabla como lista moderna */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        thead {
+            display: none;
+        }
+
+        tbody {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* cada regalo = tarjeta */
+        tr {
+            display: block;
+            background: white;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+            transition: .25s ease;
+        }
+
+        tr:hover {
+            transform: translateY(-2px);
+        }
+
+        /* celdas */
+        td {
+            display: block;
+            border: none;
+            padding: 10px 0;
+            text-align: left;
+        }
+
+        /* etiquetas */
+        td::before {
+            display: block;
+            font-weight: 600;
+            color: #78956f;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        td:nth-child(1)::before {
+            content: "🎁 Regalo";
+        }
+
+        td:nth-child(2)::before {
+            content: "👤 Reserva";
+        }
+
+        td:nth-child(3)::before {
+            content: "🔗 Referencia";
+        }
+
+        td:nth-child(4)::before {
+            content: "Acción";
+        }
+
+        /* inputs */
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            font-size: 16px;
+        }
+
+        /* botones */
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 8px;
+            transition: .2s;
+        }
+
+        .reservar {
+            background: linear-gradient(135deg, #66bb6a, #2e7d32);
+            color: white;
+        }
+
+        .reservar:hover {
+            transform: scale(1.02);
+        }
+
+        .liberar {
+            background: #e53935;
+            color: white;
+        }
+
+        /* link referencia */
+        a {
+            display: inline-block;
+            padding: 10px 16px;
+            background: #e8f5e9;
+            border-radius: 12px;
+        }
+
+        /* header invitación más premium */
+        .invitacion {
+            border-radius: 24px;
+            padding: 30px 20px;
+            margin-bottom: 25px;
+        }
+
+        /* desktop vuelve a tabla normal */
+        @media (min-width: 900px) {
+
+            thead {
+                display: table-header-group;
             }
 
-            .container {
+            tbody {
+                display: table-row-group;
+            }
+
+            tr {
+                display: table-row;
                 padding: 0;
-            }
-
-            table {
-                border-radius: 0;
-                background: transparent;
                 box-shadow: none;
             }
 
-            table,
-            thead,
-            tbody,
-            th,
             td,
-            tr {
-                display: block;
-                width: 100%;
-            }
-
-            thead {
-                display: none;
-            }
-
-            tr {
-                background: white;
-                margin-bottom: 15px;
-                border-radius: 14px;
-                padding: 15px;
-                box-shadow: 0 6px 16px rgba(0, 0, 0, .08);
-            }
-
-            td {
-                border: none;
-                padding: 12px 0;
-                text-align: left;
-                display: block;
+            th {
+                display: table-cell;
+                padding: 14px;
+                text-align: center;
             }
 
             td::before {
-                display: block;
-                font-weight: bold;
-                color: #78956f;
-                margin-bottom: 6px;
-            }
-
-            td:nth-child(1)::before {
-                content: "🎁 Regalo";
-            }
-
-            td:nth-child(2)::before {
-                content: "👤 Reserva";
-            }
-
-            td:nth-child(3)::before {
-                content: "🔗 Referencia";
-            }
-
-            td:nth-child(4)::before {
-                content: "Acción";
-            }
-
-            input {
-                width: 100%;
-                box-sizing: border-box;
+                display: none;
             }
 
             button {
-                width: 100%;
-                padding: 14px;
-                font-size: 16px;
-            }
-
-            .invitacion {
-                padding: 20px 15px;
-            }
-
-            .bebe {
-                font-size: 26px;
+                width: auto;
             }
         }
     </style>
