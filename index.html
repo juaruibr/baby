@@ -543,6 +543,85 @@
             background: #78956f;
             color: white;
         }
+
+        /* ===== SUCCESS CHECK ===== */
+
+        .success-check {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: .3s;
+            z-index: 9999;
+        }
+
+        .success-check.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .check-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .2);
+            animation: popIn .4s ease;
+        }
+
+        .check-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #4caf50;
+            color: white;
+            font-size: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+            animation: bounce .6s ease;
+        }
+
+        .check-box p {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #2e7d32;
+        }
+
+        /* animaciones */
+        @keyframes popIn {
+            from {
+                transform: scale(.7);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: scale(0);
+            }
+
+            60% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 
@@ -753,7 +832,7 @@
 
                         });
 
-                        celebrar();
+                        mostrarCheck();
 
                     } catch (error) {
                         if (error === "YA_RESERVADO") {
@@ -807,6 +886,17 @@
             setTimeout(() => efecto.remove(), 1000);
         }
 
+        // ===== CHECK VERDE =====
+        function mostrarCheck() {
+            const check = document.getElementById("successCheck");
+            check.classList.add("show");
+
+            setTimeout(() => {
+                check.classList.remove("show");
+            }, 1800);
+        }
+
+
         // ===== MODAL =====
         let accionPendiente = null;
 
@@ -845,6 +935,15 @@
             </div>
         </div>
     </div>
+
+    <!-- ===== CHECK RESERVA EXITOSA ===== -->
+    <div id="successCheck" class="success-check">
+        <div class="check-box">
+            <div class="check-icon">✓</div>
+            <p>Reserva confirmada 💚</p>
+        </div>
+    </div>
+
 
 </body>
 
