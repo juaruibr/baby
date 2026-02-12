@@ -622,6 +622,22 @@
                 transform: scale(1);
             }
         }
+
+        .contacto {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn-contacto {
+            display: inline-block;
+            margin-top: 10px;
+            background: #25d366;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -647,6 +663,15 @@
             </thead>
             <tbody id="tbody"></tbody>
         </table>
+
+        <div class="contacto">
+            <p>¿Te arrepentiste de tu reserva o necesitas ayuda?</p>
+            <a href="https://wa.me/573136370245?text=Hola,%20quiero%20modificar%20mi%20reserva%20del%20baby%20shower%20de%20Juan%20Martín"
+                target="_blank" class="btn-contacto">
+                Contactar a los papás 💬
+            </a>
+        </div>
+
 
         <div class="footer">Con amor para nuestro bebé 💚</div>
 
@@ -848,26 +873,28 @@
 
 
         // ===== LIBERAR =====
-        window.liberar = async function (i) {
-            if (!datos[i].reservaId) return;
+        window.liberar = function (i) {
 
-            // validar dueño
             if (datos[i].usuarioId !== usuarioId) {
-                alert("Solo la persona que reservó puede liberar este regalo 💚");
+                alert("Solo quien reservó puede liberar este regalo 💚");
                 return;
             }
 
-            await updateDoc(doc(db, "reservas", datos[i].reservaId), {
-                reservadoPor: "",
-                estado: "disponible",
-                usuarioId: null
-            });
+            abrirModal(
+                `¿Seguro que quieres cancelar tu reserva de "${datos[i].regalo}"?`,
+                async () => {
 
-            datos[i].quien = "";
-            datos[i].usuarioId = null;
+                    await updateDoc(doc(db, "reservas", datos[i].reservaId), {
+                        reservadoPor: "",
+                        estado: "disponible",
+                        usuarioId: null
+                    });
 
-            render();
+                    mostrarCheck();
+                }
+            );
         }
+
 
 
 
