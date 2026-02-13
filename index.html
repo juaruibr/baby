@@ -1123,10 +1123,13 @@
         window.reservar = function (i) {
 
             const nombre = document.getElementById("n" + i).value.trim();
-            if (!nombre) return alert("Escribe tu nombre");
+            if (!nombre) {
+                alert("Escribe tu nombre");
+                return;
+            }
 
             abrirModal(
-                `¿Confirmas reservar "${datos[i].regalo}" a nombre de ${nombre}?`,
+                `¿Deseas confirmar la reserva de "${datos[i].regalo}" a nombre de ${nombre}?`,
                 async () => {
 
                     try {
@@ -1155,7 +1158,6 @@
                                 estado: "reservado",
                                 fecha: new Date()
                             });
-
                         });
 
                         mostrarCheck("Reserva confirmada 💚");
@@ -1167,10 +1169,12 @@
                             alert("Ocurrió un error");
                         }
                     }
-
-                }
+                },
+                "Confirmar reserva 💚",
+                "Reservar"
             );
         };
+
 
 
         // ===== LIBERAR =====
@@ -1185,19 +1189,23 @@
                 `¿Seguro que quieres cancelar tu reserva de "${datos[i].regalo}"?`,
                 async () => {
 
-                    await updateDoc(doc(db, "reservas", datos[i].reservaId), {
-                        reservadoPor: "",
-                        estado: "disponible",
-                        usuarioId: null
-                    });
+                    try {
+                        await updateDoc(doc(db, "reservas", datos[i].reservaId), {
+                            reservadoPor: "",
+                            estado: "disponible",
+                            usuarioId: null
+                        });
 
-                    mostrarCheck("Reserva liberada correctamente 🤎");
-                }
+                        mostrarCheck("Reserva liberada correctamente 🤎");
+
+                    } catch (error) {
+                        alert("Ocurrió un error al liberar la reserva");
+                    }
+                },
+                "Liberar regalo 🤎",
+                "Liberar"
             );
-        }
-
-
-
+        };
 
         // ===== CELEBRACIÓN =====
         function celebrar() {
@@ -1232,8 +1240,11 @@
         // ===== MODAL =====
         let accionPendiente = null;
 
-        function abrirModal(texto, callback) {
+        function abrirModal(texto, callback, titulo = "Confirmar reserva 💚", textoBoton = "Confirmar") {
             document.getElementById("modalTexto").innerText = texto;
+            document.getElementById("modalTitulo").innerText = titulo;
+            document.getElementById("btnConfirmar").innerText = textoBoton;
+
             document.getElementById("modalConfirm").classList.add("show");
 
             accionPendiente = callback;
@@ -1258,7 +1269,7 @@
     <!-- ===== MODAL CONFIRMACION ===== -->
     <div id="modalConfirm" class="modal">
         <div class="modal-box">
-            <h3>Confirmar reserva 💚</h3>
+            <h3 id="modalTitulo">Confirmar reserva 💚</h3>
             <p id="modalTexto"></p>
 
             <div class="modal-actions">
