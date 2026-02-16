@@ -1117,16 +1117,16 @@
 <td>
     
   ${item.quien
-                        ? `` /* ya no mostramos badge aquí */
-                        : `<span class="estado-disponible" style="color:#888;">Disponible</span>`
+                        ? `<div class="liberarA"><div><span class="badge-reservado">✓ Reservado</span>` /* ya no mostramos badge aquí */
+                        : `
+                        <span class="estado-disponible" style="color:#888;">Disponible</span></div>`
                     }
 </td>
 
 <td>
   ${item.quien
                         ? (item.usuarioId === usuarioId
-                            ? `<div class="liberarA"><div><span class="badge-reservado">✓ Reservado</span></div>
-                            <button class="liberar" onclick="window.liberar(${i})">Liberar</button></div>`
+                            ? `<button class="liberar" onclick="window.liberar(${i})">Liberar</button>`
                             : ``)
                         : `<button class="reservar" onclick="window.reservar(${i})">Reservar</button>`
                     }
