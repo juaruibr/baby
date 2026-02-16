@@ -361,7 +361,8 @@
 
         /* etiquetas */
         td::before {
-            display: block;
+            display: flex;
+            text-align: center;
             font-weight: 600;
             color: #7f8c57;
             font-size: 14px;
@@ -431,18 +432,6 @@
             transition: .2s;
         }
 
-        .liberarA {
-            /* café elegante */
-            color: white;
-            transition: .2s;
-
-             display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: nowrap;
-            /* 🔥 nunca baja el badge */
-            min-width: 0;
-        }
 
         .liberar:hover {
             background: #b07447;
@@ -728,7 +717,16 @@
         /* contenedor nombre + badge */
         .nombre-reserva {
             display: flex;
-            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: nowrap;
+            /* 🔥 nunca baja el badge */
+            min-width: 0;
+        }
+
+        .nombre-res {
+            display: flex;
+            justify-content: center;
             gap: 8px;
             flex-wrap: nowrap;
             /* 🔥 nunca baja el badge */
@@ -737,6 +735,7 @@
 
         /* permite que el nombre se reduzca sin romper layout */
         .nombre-reserva strong {
+            text-align: center;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -791,12 +790,13 @@
 
             /* ocultamos estado */
             tr.reservado-row td:nth-child(4) {
-                display: none;
+                grid-column: 2;
+                justify-self: center;
             }
 
             /* botón a la derecha */
             tr.reservado-row td:nth-child(5) {
-                grid-column: 2;
+                grid-column: 3;
                 justify-self: end;
             }
 
@@ -1088,7 +1088,7 @@
   <div class="regalo-titulo">${item.regalo}</div>
 
   ${item.quien ? `
-    <div class="regalo-sub">Esta opción de Regalo fue reservada por: </div>
+    <div class="regalo-sub">Opción de Regalo Seleccionada Por: </div>
   ` : ""}
 </td>
 
@@ -1098,14 +1098,13 @@
                         ? `
       <div class="nombre-reserva">
         <strong>${item.quien}</strong>
-                
+                             
       </div>
-      
+             
     `
                         : `<input placeholder="Tu nombre" id="n${i}">`
                     }
 </td>
-
 
 <td>
   ${item.quien
@@ -1117,9 +1116,8 @@
 <td>
     
   ${item.quien
-                        ? `<div class="liberarA"><div><span class="badge-reservado">✓ Reservado</span>` /* ya no mostramos badge aquí */
-                        : `
-                        <span class="estado-disponible" style="color:#888;">Disponible</span></div>`
+                        ? `<div class="nombre-res"> <span class="badge-reservado">✓ Reservado</span> </div>  ` /* ya no mostramos badge aquí */
+                        : `<span class="estado-disponible" style="color:#888;">Disponible</span>`
                     }
 </td>
 
